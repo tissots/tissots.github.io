@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brian — Embedded Systems Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       THEME — edit these CSS variables to restyle the whole site
+    ============================================================ */
+    :root {
+      --bg:           #f5f2ec;
+      --glass-bg:     rgba(255,255,255,0.55);
+      --glass-border: rgba(255,255,255,0.90);
+      --glass-shine:  inset 0 1px 0 rgba(255,255,255,0.90), inset 1px 0 0 rgba(255,255,255,0.50);
+      --glass-shadow: 0 4px 24px rgba(80,50,20,0.10), 0 1px 4px rgba(80,50,20,0.06);
+      --ink:          #2d1f0e;
+      --ink-70:       rgba(45,31,14,0.70);
+      --ink-40:       rgba(45,31,14,0.40);
+      --accent:       #e06c2a;
+      --warm-100:     #f0ebe0;
+      --warm-200:     #dfd8cb;
+      --r-sm: 14px; --r-md: 22px; --r-lg: 34px; --r-pill: 100px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--ink); overflow-x: hidden; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+    /* Background orbs */
+    .bg-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(100px); }
+    .orb-1 { width:700px;height:700px; background:radial-gradient(circle,#e8c99a,#d4b47a 60%,transparent); top:-220px;left:-180px; opacity:.45; }
+    .orb-2 { width:600px;height:600px; background:radial-gradient(circle,#f0d4a8,#c8aa70 60%,transparent); bottom:-150px;right:-120px; opacity:.40; }
+    .orb-3 { width:500px;height:500px; background:radial-gradient(circle,#f8e4c0,#e0c888 60%,transparent); top:38%;left:28%; opacity:.30; }
+    .orb-4 { width:300px;height:300px; background:radial-gradient(circle,rgba(244,168,96,.4),transparent 70%); top:20%;right:10%; opacity:.6; }
+
+    /* Nav */
+    nav { position:fixed; top:18px; left:50%; transform:translateX(-50%); z-index:200; background:rgba(245,240,232,0.65); backdrop-filter:blur(28px) saturate(1.8); -webkit-backdrop-filter:blur(28px) saturate(1.8); border:1.5px solid rgba(255,255,255,.90); border-radius:var(--r-pill); padding:10px 10px 10px 24px; display:flex; align-items:center; gap:28px; box-shadow:0 2px 20px rgba(80,50,20,.10), inset 0 1px 0 rgba(255,255,255,.9); white-space:nowrap; }
+    .nav-logo { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; color:var(--ink); text-decoration:none; }
+    .nav-logo span { color:var(--accent); }
+    .nav-links { display:flex; gap:22px; }
+    .nav-links a { font-size:13.5px; font-weight:500; color:var(--ink-70); text-decoration:none; transition:color .18s; }
+    .nav-links a:hover { color:var(--ink); }
+    .nav-cta { background:var(--accent); color:#fff !important; padding:9px 20px; border-radius:var(--r-pill); font-size:13px !important; font-weight:600 !important; text-decoration:none; transition:opacity .2s, transform .2s; box-shadow:0 2px 10px rgba(224,108,42,.30); }
+    .nav-cta:hover { opacity:.88; transform:translateY(-1px); }
+
+    main { position:relative; z-index:1; }
+
+    /* Hero */
+    .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:130px 48px 80px; max-width:1120px; margin:0 auto; }
+    .hero-eyebrow { display:inline-flex; align-items:center; gap:9px; font-size:12.5px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; color:var(--ink-70); margin-bottom:30px; }
+    .dot-live { width:7px; height:7px; background:#3dbf6e; border-radius:50%; box-shadow:0 0 0 3px rgba(61,191,110,.20); animation:livepulse 2s ease-in-out infinite; }
+    @keyframes livepulse { 0%,100%{box-shadow:0 0 0 3px rgba(61,191,110,.20);}50%{box-shadow:0 0 0 7px rgba(61,191,110,.06);} }
+    .hero h1 { font-family:'Space Grotesk',sans-serif; font-size:clamp(54px,8.5vw,104px); font-weight:700; line-height:1.00; letter-spacing:-3.5px; color:var(--ink); margin-bottom:30px; }
+    .hero h1 .fade { color:var(--ink-40); }
+    .hero h1 .accent { color:var(--accent); }
+    .hero-sub { font-size:17px; font-weight:400; color:var(--ink-70); max-width:500px; line-height:1.75; margin-bottom:48px; }
+    .hero-actions { display:flex; gap:12px; flex-wrap:wrap; }
+
+    /* Buttons */
+    .btn-primary { display:inline-flex; align-items:center; gap:8px; background:var(--ink); color:#fff; padding:14px 28px; border-radius:var(--r-pill); font-size:15px; font-weight:600; text-decoration:none; transition:opacity .2s, transform .2s; }
+    .btn-primary:hover { opacity:.84; transform:translateY(-2px); }
+    .btn-outline { display:inline-flex; align-items:center; gap:8px; background:var(--glass-bg); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1.5px solid var(--warm-200); color:var(--ink); padding:14px 28px; border-radius:var(--r-pill); font-size:15px; font-weight:500; text-decoration:none; box-shadow:var(--glass-shine); transition:background .2s, transform .2s; }
+    .btn-outline:hover { background:rgba(255,255,255,.88); transform:translateY(-2px); }
+    .btn-accent { display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#fff; padding:14px 28px; border-radius:var(--r-pill); font-size:15px; font-weight:600; text-decoration:none; box-shadow:0 4px 16px rgba(224,108,42,.30); transition:opacity .2s, transform .2s; }
+    .btn-accent:hover { opacity:.88; transform:translateY(-2px); }
+    .btn-yt { display:inline-flex; align-items:center; gap:8px; background:#ff2020; color:#fff; padding:13px 26px; border-radius:var(--r-pill); font-size:14.5px; font-weight:600; text-decoration:none; box-shadow:0 4px 16px rgba(255,32,32,.25); transition:opacity .2s, transform .2s; }
+    .btn-yt:hover { opacity:.88; transform:translateY(-2px); }
+
+    /* Stats */
+    .stats-wrap { max-width:1120px; margin:0 auto; padding:0 48px 80px; }
+    .stats-bar { display:flex; border-radius:var(--r-sm); overflow:hidden; border:1.5px solid var(--glass-border); box-shadow:var(--glass-shadow), var(--glass-shine); }
+    .stat-item { flex:1; padding:28px 30px; background:var(--glass-bg); backdrop-filter:blur(24px) saturate(1.6); -webkit-backdrop-filter:blur(24px) saturate(1.6); border-right:1.5px solid rgba(255,255,255,.60); }
+    .stat-item:last-child { border-right:none; }
+    .stat-num { font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:700; letter-spacing:-1px; color:var(--ink); }
+    .stat-num .u { color:var(--accent); }
+    .stat-label { font-size:13px; color:var(--ink-70); margin-top:4px; }
+
+    /* Sections */
+    section { max-width:1120px; margin:0 auto; padding:80px 48px; }
+    .section-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:40px; }
+    .section-title { font-family:'Space Grotesk',sans-serif; font-size:clamp(28px,4vw,44px); font-weight:700; letter-spacing:-1.5px; color:var(--ink); }
+    .section-link { font-size:13px; font-weight:600; color:var(--accent); text-decoration:none; transition:opacity .18s; }
+    .section-link:hover { opacity:.7; }
+    hr.divider { border:none; border-top:1px solid var(--warm-200); margin:0 48px; }
+
+    /* Filter tabs */
+    .filter-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:32px; }
+    .filter-tab { font-size:13px; font-weight:600; padding:8px 18px; border-radius:var(--r-pill); border:1.5px solid var(--warm-200); background:var(--glass-bg); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); color:var(--ink-70); cursor:pointer; transition:all .18s; box-shadow:var(--glass-shine); }
+    .filter-tab:hover { color:var(--ink); border-color:var(--warm-300); }
+    .filter-tab.active { background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 2px 10px rgba(224,108,42,.28); }
+
+    /* Project grid */
+    .projects-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+
+    /* Glass card base */
+    .project-card {
+      border-radius:var(--r-md); padding:28px;
+      text-decoration:none; color:inherit;
+      display:flex; flex-direction:column; gap:14px;
+      position:relative; overflow:hidden;
+      background:rgba(255,255,255,.52);
+      backdrop-filter:blur(30px) saturate(1.7);
+      -webkit-backdrop-filter:blur(30px) saturate(1.7);
+      border:1.5px solid rgba(255,255,255,.88);
+      box-shadow:0 6px 28px rgba(80,50,20,.10), 0 1px 4px rgba(80,50,20,.06), inset 0 1px 0 rgba(255,255,255,.90), inset 1px 0 0 rgba(255,255,255,.50);
+      cursor:pointer;
+      transition:transform .22s, box-shadow .22s, opacity .2s;
+    }
+    .project-card::before { content:''; position:absolute; top:0; left:0; right:0; height:55%; background:linear-gradient(170deg,rgba(255,255,255,.60) 0%,rgba(255,255,255,.15) 50%,transparent 100%); border-radius:var(--r-md) var(--r-md) 0 0; pointer-events:none; }
+    .project-card:hover { transform:translateY(-5px); box-shadow:0 18px 50px rgba(80,50,20,.14), 0 4px 12px rgba(80,50,20,.08), inset 0 1px 0 rgba(255,255,255,.90), inset 1px 0 0 rgba(255,255,255,.50); }
+    .project-card.hidden { display:none; }
+
+    /* Featured card */
+    .project-card.featured { grid-column:span 2; flex-direction:row; gap:32px; align-items:center; }
+    .featured-thumb { width:220px; height:180px; flex-shrink:0; border-radius:var(--r-sm); object-fit:cover; border:1.5px solid rgba(255,255,255,.80); background:linear-gradient(135deg,rgba(224,108,42,.12),var(--warm-200)); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .featured-thumb img { width:100%; height:100%; object-fit:cover; border-radius:var(--r-sm); }
+    .featured-thumb .thumb-placeholder { opacity:.5; }
+    .featured-text { flex:1; display:flex; flex-direction:column; gap:14px; }
+
+    /* Thumbnail on regular cards */
+    .card-thumb { width:100%; height:160px; border-radius:10px; object-fit:cover; border:1.5px solid rgba(255,255,255,.70); background:var(--warm-100); overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    .card-thumb img { width:100%; height:100%; object-fit:cover; }
+    .card-thumb .thumb-placeholder { opacity:.4; }
+
+    /* Attachments row */
+    .attachments { display:flex; flex-wrap:wrap; gap:7px; margin-top:4px; }
+    .attach-pill {
+      display:inline-flex; align-items:center; gap:6px;
+      font-size:11.5px; font-weight:600;
+      padding:5px 12px; border-radius:var(--r-pill);
+      border:1px solid rgba(255,255,255,.80);
+      background:rgba(255,255,255,.65);
+      backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+      color:var(--ink-70); cursor:pointer;
+      transition:background .15s, transform .15s, color .15s;
+      text-decoration:none;
+    }
+    .attach-pill:hover { background:rgba(255,255,255,.95); color:var(--ink); transform:translateY(-1px); }
+    .attach-pill svg { width:13px; height:13px; flex-shrink:0; }
+    .attach-pill.type-pdf  { border-color:rgba(220,60,60,.25);  color:#c03030; }
+    .attach-pill.type-vid  { border-color:rgba(224,108,42,.30); color:var(--accent); }
+    .attach-pill.type-img  { border-color:rgba(80,140,220,.25); color:#2060b0; }
+    .attach-pill.type-kicad{ border-color:rgba(40,160,90,.25);  color:#1a7a40; }
+    .attach-pill.type-zip  { border-color:rgba(140,90,200,.25); color:#6030a0; }
+    .attach-pill.type-link { border-color:rgba(224,108,42,.30); color:var(--accent); }
+
+    .card-badge { display:inline-flex; align-items:center; gap:6px; font-size:10.5px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--accent); background:rgba(224,108,42,.10); border:1px solid rgba(224,108,42,.20); padding:4px 12px; border-radius:var(--r-pill); width:fit-content; }
+    .card-badge.neutral { color:var(--ink-70); background:var(--warm-100); border-color:var(--warm-200); }
+    .card-icon-wrap { width:46px; height:46px; border-radius:12px; background:var(--warm-100); border:1.5px solid rgba(255,255,255,.80); box-shadow:0 2px 8px rgba(80,50,20,.08), inset 0 1px 0 rgba(255,255,255,.9); display:flex; align-items:center; justify-content:center; }
+    .card-icon-wrap svg { width:22px; height:22px; }
+    .card-title { font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:700; letter-spacing:-.4px; color:var(--ink); line-height:1.2; }
+    .card-desc { font-size:14px; color:var(--ink-70); line-height:1.65; flex:1; }
+    .chip-row { display:flex; flex-wrap:wrap; gap:6px; }
+    .chip { font-size:11px; font-weight:500; background:rgba(255,255,255,.70); border:1px solid rgba(255,255,255,.80); color:var(--ink-70); padding:4px 10px; border-radius:var(--r-pill); }
+    .arrow { align-self:flex-end; color:var(--ink-40); font-size:16px; transition:color .2s, transform .2s; }
+    .project-card:hover .arrow { color:var(--accent); transform:translate(2px,-2px); }
+
+    /* Lightbox modal */
+    .modal-overlay { display:none; position:fixed; inset:0; z-index:500; background:rgba(20,12,4,.55); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); align-items:center; justify-content:center; padding:24px; }
+    .modal-overlay.open { display:flex; }
+    .modal-box { background:rgba(250,247,242,.96); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); border:1.5px solid rgba(255,255,255,.95); border-radius:var(--r-lg); width:100%; max-width:860px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 32px 80px rgba(40,20,0,.22), inset 0 1px 0 rgba(255,255,255,.9); }
+    .modal-header { display:flex; align-items:flex-start; justify-content:space-between; padding:28px 32px 20px; border-bottom:1px solid var(--warm-200); gap:16px; }
+    .modal-title { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; letter-spacing:-.5px; color:var(--ink); }
+    .modal-category { font-size:11px; font-weight:700; letter-spacing:.7px; text-transform:uppercase; color:var(--accent); margin-top:4px; }
+    .modal-close { width:34px; height:34px; border-radius:50%; background:var(--warm-100); border:1px solid var(--warm-200); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px; color:var(--ink-70); transition:background .15s; }
+    .modal-close:hover { background:var(--warm-200); }
+    .modal-body { padding:24px 32px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:20px; }
+    .modal-desc { font-size:15px; color:var(--ink-70); line-height:1.75; }
+    .modal-chips { display:flex; flex-wrap:wrap; gap:7px; }
+    .modal-chips .chip { font-size:12px; }
+    .modal-files-title { font-size:12px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--ink-40); margin-bottom:2px; }
+    .modal-files { display:flex; flex-direction:column; gap:9px; }
+    .modal-file-row {
+      display:flex; align-items:center; gap:14px;
+      padding:13px 16px; border-radius:12px;
+      background:rgba(255,255,255,.65); border:1.5px solid rgba(255,255,255,.90);
+      box-shadow:0 2px 8px rgba(80,50,20,.06), inset 0 1px 0 rgba(255,255,255,.9);
+      text-decoration:none; color:var(--ink); cursor:pointer;
+      transition:background .15s, transform .15s;
+    }
+    .modal-file-row:hover { background:rgba(255,255,255,.92); transform:translateY(-1px); }
+    .file-type-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .file-type-icon svg { width:18px; height:18px; }
+    .fti-pdf  { background:rgba(220,60,60,.10);  }
+    .fti-vid  { background:rgba(224,108,42,.10); }
+    .fti-img  { background:rgba(80,140,220,.10); }
+    .fti-kicad{ background:rgba(40,160,90,.10);  }
+    .fti-zip  { background:rgba(140,90,200,.10); }
+    .fti-link { background:rgba(224,108,42,.10); }
+    .file-info { flex:1; min-width:0; }
+    .file-name { font-size:14px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .file-meta { font-size:12px; color:var(--ink-40); margin-top:2px; }
+    .file-action { font-size:12px; font-weight:600; color:var(--accent); white-space:nowrap; }
+
+    /* Preview area in modal */
+    .modal-preview { border-radius:12px; overflow:hidden; border:1.5px solid rgba(255,255,255,.80); background:var(--warm-100); }
+    .modal-preview img { width:100%; display:block; border-radius:12px; max-height:340px; object-fit:contain; }
+    .modal-preview iframe { width:100%; height:340px; border:none; display:block; }
+    .modal-preview video { width:100%; display:block; border-radius:12px; max-height:340px; }
+
+    /* Stack */
+    .stack-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; }
+    .stack-card { border-radius:var(--r-md); padding:26px 24px; background:rgba(255,255,255,.50); backdrop-filter:blur(28px) saturate(1.6); -webkit-backdrop-filter:blur(28px) saturate(1.6); border:1.5px solid rgba(255,255,255,.88); box-shadow:0 4px 20px rgba(80,50,20,.08), inset 0 1px 0 rgba(255,255,255,.90), inset 1px 0 0 rgba(255,255,255,.50); position:relative; overflow:hidden; transition:transform .2s; }
+    .stack-card::before { content:''; position:absolute; top:0; left:0; right:0; height:50%; background:linear-gradient(170deg,rgba(255,255,255,.55) 0%,transparent 100%); pointer-events:none; }
+    .stack-card:hover { transform:translateY(-3px); }
+    .stack-icon { width:40px; height:40px; margin-bottom:14px; border-radius:10px; background:var(--warm-100); border:1.5px solid rgba(255,255,255,.80); display:flex; align-items:center; justify-content:center; }
+    .stack-icon svg { width:20px; height:20px; }
+    .stack-name { font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:var(--ink); letter-spacing:-.2px; }
+    .stack-detail { font-size:12.5px; color:var(--ink-70); margin-top:4px; line-height:1.5; }
+
+    /* YouTube */
+    .yt-section { padding:0 48px 80px; max-width:1120px; margin:0 auto; }
+    .yt-banner { border-radius:var(--r-lg); padding:54px 60px; display:flex; align-items:center; justify-content:space-between; gap:40px; background:linear-gradient(120deg,rgba(255,255,255,.60) 0%,rgba(245,225,200,.45) 100%); backdrop-filter:blur(30px) saturate(1.7); -webkit-backdrop-filter:blur(30px) saturate(1.7); border:1.5px solid rgba(255,255,255,.88); box-shadow:0 8px 40px rgba(80,50,20,.10), inset 0 1.5px 0 rgba(255,255,255,.95), inset 1px 0 0 rgba(255,255,255,.60); position:relative; overflow:hidden; }
+    .yt-banner::before { content:''; position:absolute; top:0; left:0; right:0; height:50%; background:linear-gradient(160deg,rgba(255,255,255,.55) 0%,transparent 100%); pointer-events:none; }
+    .yt-text h2 { font-family:'Space Grotesk',sans-serif; font-size:clamp(22px,3vw,34px); font-weight:700; letter-spacing:-1px; color:var(--ink); margin-bottom:10px; }
+    .yt-text p { font-size:15px; color:var(--ink-70); max-width:400px; }
+    .yt-actions { display:flex; gap:12px; flex-wrap:wrap; }
+
+    /* About */
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .about-card { border-radius:var(--r-md); padding:38px; background:rgba(255,255,255,.50); backdrop-filter:blur(28px) saturate(1.6); -webkit-backdrop-filter:blur(28px) saturate(1.6); border:1.5px solid rgba(255,255,255,.88); box-shadow:0 4px 24px rgba(80,50,20,.09), inset 0 1px 0 rgba(255,255,255,.90), inset 1px 0 0 rgba(255,255,255,.50); position:relative; overflow:hidden; }
+    .about-card::before { content:''; position:absolute; top:0; left:0; right:0; height:45%; background:linear-gradient(170deg,rgba(255,255,255,.55) 0%,transparent 100%); pointer-events:none; }
+    .about-card.tall { grid-row:span 2; }
+    .about-card.accent-strip { border-top:3px solid var(--accent); }
+    .about-card h3 { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; letter-spacing:-.4px; color:var(--ink); margin-bottom:14px; }
+    .about-card p { font-size:15px; color:var(--ink-70); line-height:1.75; }
+    .about-card p + p { margin-top:14px; }
+
+    /* Contact */
+    .contact-row { display:flex; gap:12px; flex-wrap:wrap; }
+    .contact-link { display:inline-flex; align-items:center; gap:10px; background:rgba(255,255,255,.55); backdrop-filter:blur(20px) saturate(1.5); -webkit-backdrop-filter:blur(20px) saturate(1.5); border:1.5px solid rgba(255,255,255,.88); border-radius:var(--r-pill); padding:13px 22px; font-size:14px; font-weight:500; color:var(--ink); text-decoration:none; box-shadow:0 2px 12px rgba(80,50,20,.07), inset 0 1px 0 rgba(255,255,255,.9); transition:transform .2s, box-shadow .2s; }
+    .contact-link:hover { transform:translateY(-3px); box-shadow:0 8px 28px rgba(80,50,20,.12), inset 0 1px 0 rgba(255,255,255,.9); }
+    .contact-link svg { width:17px; height:17px; flex-shrink:0; }
+
+    footer { border-top:1px solid var(--warm-200); padding:28px 48px; max-width:1120px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
+    footer p { font-size:13px; color:var(--ink-40); }
+    footer a { color:var(--accent); text-decoration:none; }
+
+    @media (max-width:820px) {
+      nav { padding:9px 9px 9px 18px; gap:14px; }
+      .nav-links { display:none; }
+      .hero { padding:100px 24px 60px; }
+      .stats-wrap { padding:0 24px 60px; }
+      .stats-bar { flex-direction:column; }
+      .stat-item { border-right:none; border-bottom:1.5px solid rgba(255,255,255,.60); }
+      .stat-item:last-child { border-bottom:none; }
+      section { padding:60px 24px; }
+      hr.divider { margin:0 24px; }
+      .projects-grid { grid-template-columns:1fr; }
+      .project-card.featured { flex-direction:column; grid-column:span 1; }
+      .featured-thumb { width:100%; height:160px; }
+      .about-grid { grid-template-columns:1fr; }
+      .about-card.tall { grid-row:span 1; }
+      .yt-section { padding:0 24px 60px; }
+      .yt-banner { flex-direction:column; padding:36px 28px; }
+      footer { flex-direction:column; gap:8px; text-align:center; padding:24px; }
+      .modal-box { border-radius:var(--r-md); }
+      .modal-header, .modal-body { padding:20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-layer" aria-hidden="true">
+  <div class="orb orb-1"></div><div class="orb orb-2"></div>
+  <div class="orb orb-3"></div><div class="orb orb-4"></div>
+</div>
+
+<nav>
+  <a href="#" class="nav-logo">B<span>.</span></a>
+  <div class="nav-links">
+    <a href="#projects">Projects</a>
+    <a href="#stack">Stack</a>
+    <a href="#about">About</a>
+  </div>
+  <a href="#contact" class="nav-cta">Contact</a>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="hero-eyebrow"><span class="dot-live"></span><span id="hero-status">Available for PCB design &amp; embedded work</span></div>
+    <h1>Building the hardware<br><span class="fade">Africa</span> <span class="accent">runs on.</span></h1>
+    <p class="hero-sub" id="hero-sub">Embedded systems engineer based in Nairobi, Kenya. I design PCBs, write firmware, and build IoT products — from smart home automation to power grid monitoring.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">See my work →</a>
+      <a href="https://github.com/yourusername" target="_blank" class="btn-outline" id="btn-github">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+
+  <div class="stats-wrap">
+    <div class="stats-bar">
+      <div class="stat-item"><div class="stat-num"><span class="u">5</span>+</div><div class="stat-label">PCB projects designed</div></div>
+      <div class="stat-item"><div class="stat-num">ESP<span class="u">32</span></div><div class="stat-label">Primary MCU platform</div></div>
+      <div class="stat-item"><div class="stat-num">Ki<span class="u">Cad</span></div><div class="stat-label">PCB design tool</div></div>
+      <div class="stat-item"><div class="stat-num"><span class="u">KE</span></div><div class="stat-label">Based in Nairobi, Kenya</div></div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <section id="projects">
+    <div class="section-header">
+      <h2 class="section-title">Projects</h2>
+      <a href="https://github.com/yourusername" class="section-link" id="github-projects-link">All files on GitHub →</a>
+    </div>
+    <div class="filter-tabs" id="filter-tabs"></div>
+    <div class="projects-grid" id="projects-grid"></div>
+  </section>
+
+  <hr class="divider" />
+
+  <section id="stack">
+    <div class="section-header"><h2 class="section-title">Stack &amp; tools</h2></div>
+    <div class="stack-grid">
+      <div class="stack-card"><div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><div class="stack-name">KiCad</div><div class="stack-detail">Schematic + PCB layout · JLCPCB fabrication</div></div>
+      <div class="stack-card"><div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="#e06c2a" stroke="none"/></svg></div><div class="stack-name">ESP32 Family</div><div class="stack-detail">C6, S3, C3-MINI · PlatformIO + Arduino/IDF</div></div>
+      <div class="stack-card"><div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></div><div class="stack-name">STM32</div><div class="stack-detail">Bare-metal C · CMSIS, HAL, Blue Pill dev</div></div>
+      <div class="stack-card"><div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div class="stack-name">C / C++</div><div class="stack-detail">Primary firmware language · FreeRTOS, MQTT</div></div>
+      <div class="stack-card"><div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div><div class="stack-name">Python</div><div class="stack-detail">PC-side tooling · pyserial, scripting, KiCad</div></div>
+      <div class="stack-card"><div class="stack-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="stack-name">IoT Stack</div><div class="stack-detail">MQTT · Node-RED · Mosquitto · Blynk</div></div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <div class="yt-section">
+    <div class="yt-banner">
+      <div class="yt-text"><h2>Electronics tutorials on YouTube</h2><p>ESP32 projects, PCB design walkthroughs, and embedded systems content — built for African makers and engineers.</p></div>
+      <div class="yt-actions">
+        <a href="https://youtube.com/@yourchannel" target="_blank" class="btn-yt" id="btn-youtube">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#ff2020"/></svg>
+          Watch now
+        </a>
+        <a href="#" class="btn-outline">See all videos ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <section id="about">
+    <div class="section-header"><h2 class="section-title">About</h2></div>
+    <div class="about-grid">
+      <div class="about-card tall accent-strip">
+        <h3>Who I am</h3>
+        <p>I'm Brian — an embedded systems engineer based in Nairobi, Kenya, with a diploma in electrical &amp; electronics engineering. I specialise in IoT product design: from the first schematic all the way to fabricated PCBs and shipped firmware.</p>
+        <p>I'm currently on industrial attachment at Kenya Power and Lighting Company (KPLC), where I'm developing a transformer fault monitoring concept that could scale across East Africa's power grid.</p>
+        <p>On the side, I run a YouTube channel teaching electronics and embedded systems to Kenyan and African makers — the kind of content I wish I had when I was starting out.</p>
+      </div>
+      <div class="about-card"><h3>Services I offer</h3><p>PCB design in KiCad (schematic to Gerbers), ESP32 &amp; STM32 firmware development, IoT product prototyping, and electronics consulting. Available on Fiverr and Upwork.</p></div>
+      <div class="about-card"><h3>Currently building</h3><p>HomeNode smart home system, transformer monitoring device for KPLC, and NyumbaEasy — a rental listing PWA for Kenyan landlords and tenants.</p></div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <section id="contact">
+    <div class="section-header"><h2 class="section-title">Get in touch</h2></div>
+    <div class="contact-row">
+      <a href="mailto:your@email.com" class="contact-link" id="link-email"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Email me</a>
+      <a href="https://github.com/yourusername" target="_blank" class="contact-link" id="link-github"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>GitHub</a>
+      <a href="https://www.fiverr.com/yourusername" target="_blank" class="contact-link" id="link-fiverr"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Fiverr</a>
+      <a href="https://www.upwork.com/freelancers/yourusername" target="_blank" class="contact-link" id="link-upwork"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Upwork</a>
+      <a href="https://linkedin.com/in/yourusername" target="_blank" class="contact-link" id="link-linkedin"><svg viewBox="0 0 24 24" fill="none" stroke="#e06c2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 Brian M. — Nairobi, Kenya</p>
+  <p>Plain HTML · <a href="https://pages.github.com" target="_blank">GitHub Pages</a></p>
+</footer>
+
+<!-- Lightbox modal -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-category" id="modal-category"></div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   ██████╗ ██████╗  ██████╗      ██╗███████╗ ██████╗████████╗███████╗
+   ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝██╔════╝╚══██╔══╝██╔════╝
+   ██████╔╝██████╔╝██║   ██║     ██║█████╗  ██║        ██║   ███████╗
+   ██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝  ██║        ██║   ╚════██║
+   ██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗╚██████╗   ██║   ███████║
+   ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝ ╚═════╝   ╚═╝   ╚══════╝
+
+   ADD A PROJECT: copy one object from the PROJECTS array below,
+   paste it at the top (or wherever you want it), fill in the fields.
+
+   FILES: put your files in a "files/" folder next to index.html
+   on GitHub, then reference them as "files/myfile.pdf"
+
+   FILE TYPES SUPPORTED:
+     pdf    → opens in browser PDF viewer
+     image  → jpg, jpeg, png, gif, webp  → shows inline preview
+     video  → mp4, webm, mov             → plays in browser
+     kicad  → .kicad_pcb, .kicad_sch, .zip → download
+     zip    → any zip / rar
+     link   → external URL (YouTube video, GitHub repo, etc.)
+================================================================ */
+
+const PROJECTS = [
+  {
+    id: "homenode",
+    title: "HomeNode — Smart Home System",
+    category: "IoT",          /* used for filter tabs */
+    badge: "★ Flagship",
+    featured: true,            /* makes card wide / prominent */
+    description: "Wireless battery-powered smart home automation designed for retrofitting existing Kenyan homes. Three node types: ESP32-C6 sensor nodes, BS1363-form actuator nodes, and an S3 hub with speaker and display. Full PCB designed in KiCad.",
+    chips: ["ESP32-C6","ESP32-S3","KiCad","BQ24074","FreeRTOS","MQTT"],
+    thumbnail: "",             /* "files/homenode-thumb.jpg" — leave "" for placeholder */
+    files: [
+      { label: "Schematic PDF",   type: "pdf",   src: "files/homenode-schematic.pdf" },
+      { label: "PCB Render",      type: "image", src: "files/homenode-pcb.png" },
+      { label: "Demo Video",      type: "video", src: "files/homenode-demo.mp4" },
+      { label: "KiCad Project",   type: "kicad", src: "files/homenode.zip" },
+      { label: "GitHub Repo",     type: "link",  src: "https://github.com/yourusername/homenode" },
+    ],
+  },
+  {
+    id: "transformer-monitor",
+    title: "Transformer Fault Monitor",
+    category: "Industrial",
+    badge: "IoT · Industrial",
+    featured: false,
+    description: "Solar-powered ESP32 + SIM7600E-H add-on for KPLC distribution transformers. Non-invasive fault detection with GPS location self-reporting to a cloud dashboard.",
+    chips: ["ESP32","SIM7600E-H","Solar","GPS"],
+    thumbnail: "",
+    files: [
+      { label: "Schematic PDF",   type: "pdf",   src: "files/transformer-schematic.pdf" },
+      { label: "Project Overview",type: "pdf",   src: "files/transformer-overview.pdf" },
+      { label: "GitHub Repo",     type: "link",  src: "https://github.com/yourusername/transformer-monitor" },
+    ],
+  },
+  {
+    id: "smart-clock",
+    title: "Smart Clock PCB",
+    category: "PCB",
+    badge: "Bare Metal · STM32",
+    featured: false,
+    description: "STM32L031K6T6 with SSD1306 OLED, DS3231 RTC, BH1750 light sensor, AHT20 temp/humidity, and PIR presence detection. Full power management with ETA6003 charger.",
+    chips: ["STM32","I2C","KiCad","SSD1306"],
+    thumbnail: "",
+    files: [
+      { label: "PCB Layout PDF",  type: "pdf",   src: "files/clock-pcb.pdf" },
+      { label: "Board Photo",     type: "image", src: "files/clock-photo.jpg" },
+      { label: "KiCad Files",     type: "kicad", src: "files/smart-clock.zip" },
+    ],
+  },
+  {
+    id: "changeover",
+    title: "Smart Auto Changeover Switch",
+    category: "PCB",
+    badge: "Power · PCB",
+    featured: false,
+    description: "ESP32-C6 based ATS with ZMPT101B voltage sensing, LM358 signal conditioning, ULN2003A relay drivers, and Finder 44.62 contactors. WiFi monitoring included.",
+    chips: ["ESP32-C6","ZMPT101B","Relay","KiCad"],
+    thumbnail: "",
+    files: [
+      { label: "Schematic",       type: "pdf",   src: "files/ats-schematic.pdf" },
+      { label: "Demo Video",      type: "link",  src: "https://youtube.com/watch?v=yourvideo" },
+      { label: "KiCad Files",     type: "kicad", src: "files/ats.zip" },
+    ],
+  },
+  {
+    id: "inverter",
+    title: "500W Inverter Controller",
+    category: "PCB",
+    badge: "Power Electronics",
+    featured: false,
+    description: "ESP32-C3 daughter board for EGS002-based 500W inverter. Monitors IFB/VFB signals, drives an OLED display, and sends WiFi alerts on fault conditions.",
+    chips: ["ESP32-C3","EGS002","OLED","WiFi"],
+    thumbnail: "",
+    files: [
+      { label: "Schematic PDF",   type: "pdf",   src: "files/inverter-schematic.pdf" },
+      { label: "KiCad Files",     type: "kicad", src: "files/inverter.zip" },
+    ],
+  },
+];
+
+/* ================================================================
+   SITE CONFIG — update your personal details here
+================================================================ */
+const CONFIG = {
+  name:        "Brian M.",
+  location:    "Nairobi, Kenya",
+  status:      "Available for PCB design & embedded work",
+  email:       "your@email.com",
+  github:      "https://github.com/yourusername",
+  youtube:     "https://youtube.com/@yourchannel",
+  linkedin:    "https://linkedin.com/in/yourusername",
+  fiverr:      "https://www.fiverr.com/yourusername",
+  upwork:      "https://www.upwork.com/freelancers/yourusername",
+  accentColor: "#e06c2a",   /* change this hex to recolour the whole site */
+};
+
+/* ================================================================
+   ENGINE — no need to edit below this line
+================================================================ */
+
+/* Apply config */
+document.querySelector('footer p').textContent = `© 2025 ${CONFIG.name} — ${CONFIG.location}`;
+document.getElementById('hero-status').textContent = CONFIG.status;
+document.getElementById('btn-github').href    = CONFIG.github;
+document.getElementById('btn-youtube').href   = CONFIG.youtube;
+document.getElementById('link-email').href    = `mailto:${CONFIG.email}`;
+document.getElementById('link-github').href   = CONFIG.github;
+document.getElementById('link-fiverr').href   = CONFIG.fiverr;
+document.getElementById('link-upwork').href   = CONFIG.upwork;
+document.getElementById('link-linkedin').href = CONFIG.linkedin;
+document.getElementById('github-projects-link').href = CONFIG.github;
+
+/* Accent colour */
+const A = CONFIG.accentColor;
+document.documentElement.style.setProperty('--accent', A);
+const hr = parseInt(A.slice(1,3),16), hg = parseInt(A.slice(3,5),16), hb = parseInt(A.slice(5,7),16);
+document.documentElement.style.setProperty('--accent-light', `rgba(${hr},${hg},${hb},0.10)`);
+document.querySelectorAll('[stroke="#e06c2a"]').forEach(el => el.setAttribute('stroke', A));
+
+/* File type helpers */
+const FILE_TYPES = {
+  pdf:   { cls:'type-pdf',   icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>', ftiCls:'fti-pdf',   label:'PDF',    action:'Open PDF' },
+  image: { cls:'type-img',   icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>', ftiCls:'fti-img',   label:'Image',  action:'View Image' },
+  video: { cls:'type-vid',   icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>', ftiCls:'fti-vid',   label:'Video',  action:'Play Video' },
+  kicad: { cls:'type-kicad', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>', ftiCls:'fti-kicad', label:'KiCad', action:'Download' },
+  zip:   { cls:'type-zip',   icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>', ftiCls:'fti-zip',   label:'ZIP',   action:'Download' },
+  link:  { cls:'type-link',  icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>', ftiCls:'fti-link',  label:'Link',  action:'Open Link' },
+};
+
+function getFileType(f) {
+  if (f.type) return f.type;
+  const ext = (f.src || '').split('.').pop().toLowerCase();
+  if (ext === 'pdf') return 'pdf';
+  if (['jpg','jpeg','png','gif','webp'].includes(ext)) return 'image';
+  if (['mp4','webm','mov'].includes(ext)) return 'video';
+  if (['kicad_pcb','kicad_sch'].includes(ext)) return 'kicad';
+  if (['zip','rar'].includes(ext)) return 'zip';
+  if (f.src && f.src.startsWith('http')) return 'link';
+  return 'zip';
+}
+
+function attachPill(f) {
+  const t = getFileType(f);
+  const info = FILE_TYPES[t] || FILE_TYPES.link;
+  return `<span class="attach-pill ${info.cls}" data-type="${t}" data-src="${f.src}" data-label="${f.label}">${info.icon}${f.label}</span>`;
+}
+
+function placeholderSVG() {
+  return `<svg class="thumb-placeholder" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="${A}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>`;
+}
+
+/* Build project cards */
+function buildCard(p) {
+  const thumbHTML = p.thumbnail
+    ? `<img src="${p.thumbnail}" alt="${p.title}" loading="lazy" />`
+    : placeholderSVG();
+  const pills = (p.files||[]).map(attachPill).join('');
+  const chips = (p.chips||[]).map(c=>`<span class="chip">${c}</span>`).join('');
+  const badgeCls = p.badge && p.badge.startsWith('★') ? 'card-badge' : 'card-badge neutral';
+
+  if (p.featured) {
+    return `
+    <div class="project-card featured" data-id="${p.id}" data-category="${p.category}">
+      <div class="featured-thumb">${thumbHTML}</div>
+      <div class="featured-text">
+        <div class="${badgeCls}">${p.badge||p.category}</div>
+        <div class="card-title">${p.title}</div>
+        <p class="card-desc">${p.description}</p>
+        <div class="chip-row">${chips}</div>
+        <div class="attachments">${pills}</div>
+      </div>
+    </div>`;
+  }
+  return `
+  <div class="project-card" data-id="${p.id}" data-category="${p.category}">
+    ${p.thumbnail ? `<div class="card-thumb">${thumbHTML}</div>` : ''}
+    <div class="${badgeCls}">${p.badge||p.category}</div>
+    <div class="card-title">${p.title}</div>
+    <p class="card-desc">${p.description}</p>
+    <div class="chip-row">${chips}</div>
+    <div class="attachments">${pills}</div>
+    <span class="arrow">↗</span>
+  </div>`;
+}
+
+/* Render grid */
+const grid = document.getElementById('projects-grid');
+PROJECTS.forEach(p => { grid.innerHTML += buildCard(p); });
+
+/* Filter tabs */
+const categories = ['All', ...new Set(PROJECTS.map(p => p.category))];
+const tabsEl = document.getElementById('filter-tabs');
+categories.forEach((cat, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'filter-tab' + (i===0?' active':'');
+  btn.textContent = cat;
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.project-card').forEach(card => {
+      const show = cat==='All' || card.dataset.category===cat;
+      card.classList.toggle('hidden', !show);
+    });
+  });
+  tabsEl.appendChild(btn);
+});
+
+/* Lightbox modal */
+const modal     = document.getElementById('modal');
+const modalTitle= document.getElementById('modal-title');
+const modalCat  = document.getElementById('modal-category');
+const modalBody = document.getElementById('modal-body');
+
+function openModal(p) {
+  modalTitle.textContent = p.title;
+  modalCat.textContent   = p.category;
+  let html = `<p class="modal-desc">${p.description}</p>`;
+  if (p.chips?.length) {
+    html += `<div class="modal-chips">${p.chips.map(c=>`<span class="chip">${c}</span>`).join('')}</div>`;
+  }
+  if (p.files?.length) {
+    html += `<div class="modal-files-title">Files &amp; resources</div><div class="modal-files">`;
+    p.files.forEach(f => {
+      const t = getFileType(f);
+      const info = FILE_TYPES[t] || FILE_TYPES.link;
+      const isDownload = ['kicad','zip'].includes(t);
+      const isExternal = t === 'link';
+      const tag    = (isDownload||isExternal) ? 'a' : 'div';
+      const extra  = isDownload ? `href="${f.src}" download` : isExternal ? `href="${f.src}" target="_blank"` : `data-preview-type="${t}" data-preview-src="${f.src}"`;
+      html += `<${tag} class="modal-file-row" ${extra}>
+        <div class="file-type-icon ${info.ftiCls}">${info.icon}</div>
+        <div class="file-info">
+          <div class="file-name">${f.label}</div>
+          <div class="file-meta">${info.label}</div>
+        </div>
+        <div class="file-action">${info.action} →</div>
+      </${tag}>`;
+    });
+    html += `</div>`;
+  }
+  modalBody.innerHTML = html;
+
+  /* Inline preview on click */
+  modalBody.querySelectorAll('[data-preview-type]').forEach(row => {
+    row.addEventListener('click', () => {
+      const type = row.dataset.previewType;
+      const src  = row.dataset.previewSrc;
+      let previewHTML = '';
+      if (type==='image') previewHTML = `<div class="modal-preview"><img src="${src}" alt="preview" /></div>`;
+      if (type==='video') previewHTML = `<div class="modal-preview"><video src="${src}" controls></video></div>`;
+      if (type==='pdf')   previewHTML = `<div class="modal-preview"><iframe src="${src}"></iframe></div>`;
+      if (!previewHTML) return;
+      const existing = modalBody.querySelector('.modal-preview');
+      if (existing) existing.remove();
+      row.insertAdjacentHTML('afterend', previewHTML);
+    });
+  });
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+/* Open modal on card click (but not on pill/link clicks) */
+grid.addEventListener('click', e => {
+  if (e.target.closest('.attach-pill') || e.target.closest('a')) return;
+  const card = e.target.closest('.project-card');
+  if (!card) return;
+  const p = PROJECTS.find(p => p.id === card.dataset.id);
+  if (p) openModal(p);
+});
+
+/* Pill click inside card → open modal then preview */
+grid.addEventListener('click', e => {
+  const pill = e.target.closest('.attach-pill');
+  if (!pill) return;
+  e.stopPropagation();
+  const card = pill.closest('.project-card');
+  const p    = PROJECTS.find(p => p.id === card.dataset.id);
+  const t    = pill.dataset.type;
+  const src  = pill.dataset.src;
+  if (['kicad','zip'].includes(t)) { const a=document.createElement('a'); a.href=src; a.download=''; a.click(); return; }
+  if (t==='link') { window.open(src,'_blank'); return; }
+  if (p) { openModal(p); }
+});
+
+/* Close modal */
+document.getElementById('modal-close').addEventListener('click', closeModal);
+modal.addEventListener('click', e => { if (e.target===modal) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+function closeModal() { modal.classList.remove('open'); document.body.style.overflow=''; }
+</script>
+</body>
+</html>
