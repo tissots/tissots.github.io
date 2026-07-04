@@ -418,99 +418,188 @@
 
 const PROJECTS = [
   {
-    id: "homenode",
-    title: "HomeNode — Smart Home System",
-    category: "IoT",          /* used for filter tabs */
-    badge: "★ Flagship",
-    featured: true,            /* makes card wide / prominent */
-    description: "Wireless battery-powered smart home automation designed for retrofitting existing Kenyan homes. Three node types: ESP32-C6 sensor nodes, BS1363-form actuator nodes, and an S3 hub with speaker and display. Full PCB designed in KiCad.",
-    chips: ["ESP32-C6","ESP32-S3","KiCad","BQ24074","FreeRTOS","MQTT"],
-    thumbnail: "",             /* "files/homenode-thumb.jpg" — leave "" for placeholder */
-    files: [
-      { label: "Schematic PDF",   type: "pdf",   src: "files/homenode-schematic.pdf" },
-      { label: "PCB Render",      type: "image", src: "files/homenode-pcb.png" },
-      { label: "Demo Video",      type: "video", src: "files/homenode-demo.mp4" },
-      { label: "KiCad Project",   type: "kicad", src: "files/homenode.zip" },
-      { label: "GitHub Repo",     type: "link",  src: "https://github.com/yourusername/homenode" },
+    "id": "homenode",
+    "title": "HomeNode — Smart Home System",
+    "category": "IoT",
+    "badge": "★ Flagship",
+    "featured": true,
+    "description": "Wireless battery-powered smart home automation designed for retrofitting existing Kenyan homes. Three node types: ESP32-C6 sensor nodes, BS1363-form actuator nodes, and an S3 hub with speaker and display. Full PCB designed in KiCad.",
+    "chips": [
+      "ESP32-C6",
+      "ESP32-S3",
+      "KiCad",
+      "BQ24074",
+      "FreeRTOS",
+      "MQTT"
     ],
+    "thumbnail": "",
+    "files": [
+      {
+        "label": "Schematic PDF",
+        "type": "pdf",
+        "src": "files/homenode-schematic.pdf"
+      },
+      {
+        "label": "PCB Render",
+        "type": "image",
+        "src": "files/homenode-pcb.png"
+      },
+      {
+        "label": "Demo Video",
+        "type": "video",
+        "src": "files/homenode-demo.mp4"
+      },
+      {
+        "label": "KiCad Project",
+        "type": "kicad",
+        "src": "files/homenode.zip"
+      },
+      {
+        "label": "GitHub Repo",
+        "type": "link",
+        "src": "https://github.com/yourusername/homenode"
+      }
+    ]
   },
   {
-    id: "transformer-monitor",
-    title: "Transformer Fault Monitor",
-    category: "Industrial",
-    badge: "IoT · Industrial",
-    featured: false,
-    description: "Solar-powered ESP32 + SIM7600E-H add-on for KPLC distribution transformers. Non-invasive fault detection with GPS location self-reporting to a cloud dashboard.",
-    chips: ["ESP32","SIM7600E-H","Solar","GPS"],
-    thumbnail: "",
-    files: [
-      { label: "Schematic PDF",   type: "pdf",   src: "files/transformer-schematic.pdf" },
-      { label: "Project Overview",type: "pdf",   src: "files/transformer-overview.pdf" },
-      { label: "GitHub Repo",     type: "link",  src: "https://github.com/yourusername/transformer-monitor" },
+    "id": "transformer-monitor",
+    "title": "Transformer Fault Monitor",
+    "category": "Industrial",
+    "badge": "IoT · Industrial",
+    "featured": false,
+    "description": "Solar-powered ESP32 + SIM7600E-H add-on for KPLC distribution transformers. Non-invasive fault detection with GPS location self-reporting to a cloud dashboard.",
+    "chips": [
+      "ESP32",
+      "SIM7600E-H",
+      "Solar",
+      "GPS"
     ],
+    "thumbnail": "",
+    "files": [
+      {
+        "label": "Schematic PDF",
+        "type": "pdf",
+        "src": "files/transformer-schematic.pdf"
+      },
+      {
+        "label": "Project Overview",
+        "type": "pdf",
+        "src": "files/transformer-overview.pdf"
+      },
+      {
+        "label": "GitHub Repo",
+        "type": "link",
+        "src": "https://github.com/yourusername/transformer-monitor"
+      }
+    ]
   },
   {
-    id: "smart-clock",
-    title: "Smart Clock PCB",
-    category: "PCB",
-    badge: "Bare Metal · STM32",
-    featured: false,
-    description: "STM32L031K6T6 with SSD1306 OLED, DS3231 RTC, BH1750 light sensor, AHT20 temp/humidity, and PIR presence detection. Full power management with ETA6003 charger.",
-    chips: ["STM32","I2C","KiCad","SSD1306"],
-    thumbnail: "",
-    files: [
-      { label: "PCB Layout PDF",  type: "pdf",   src: "files/clock-pcb.pdf" },
-      { label: "Board Photo",     type: "image", src: "files/clock-photo.jpg" },
-      { label: "KiCad Files",     type: "kicad", src: "files/smart-clock.zip" },
+    "id": "smart-clock",
+    "title": "Smart Clock PCB",
+    "category": "PCB",
+    "badge": "Bare Metal · STM32",
+    "featured": false,
+    "description": "STM32L031K6T6 with SSD1306 OLED, DS3231 RTC, BH1750 light sensor, AHT20 temp/humidity, and PIR presence detection. Full power management with ETA6003 charger.",
+    "chips": [
+      "STM32",
+      "I2C",
+      "KiCad",
+      "SSD1306"
     ],
+    "thumbnail": "",
+    "files": [
+      {
+        "label": "PCB Layout PDF",
+        "type": "pdf",
+        "src": "files/clock-pcb.pdf"
+      },
+      {
+        "label": "Board Photo",
+        "type": "image",
+        "src": "files/clock-photo.jpg"
+      },
+      {
+        "label": "KiCad Files",
+        "type": "kicad",
+        "src": "files/smart-clock.zip"
+      }
+    ]
   },
   {
-    id: "changeover",
-    title: "Smart Auto Changeover Switch",
-    category: "PCB",
-    badge: "Power · PCB",
-    featured: false,
-    description: "ESP32-C6 based ATS with ZMPT101B voltage sensing, LM358 signal conditioning, ULN2003A relay drivers, and Finder 44.62 contactors. WiFi monitoring included.",
-    chips: ["ESP32-C6","ZMPT101B","Relay","KiCad"],
-    thumbnail: "",
-    files: [
-      { label: "Schematic",       type: "pdf",   src: "files/ats-schematic.pdf" },
-      { label: "Demo Video",      type: "link",  src: "https://youtube.com/watch?v=yourvideo" },
-      { label: "KiCad Files",     type: "kicad", src: "files/ats.zip" },
+    "id": "changeover",
+    "title": "Smart Auto Changeover Switch",
+    "category": "PCB",
+    "badge": "Power · PCB",
+    "featured": false,
+    "description": "ESP32-C6 based ATS with ZMPT101B voltage sensing, LM358 signal conditioning, ULN2003A relay drivers, and Finder 44.62 contactors. WiFi monitoring included.",
+    "chips": [
+      "ESP32-C6",
+      "ZMPT101B",
+      "Relay",
+      "KiCad"
     ],
+    "thumbnail": "",
+    "files": [
+      {
+        "label": "Schematic",
+        "type": "pdf",
+        "src": "files/ats-schematic.pdf"
+      },
+      {
+        "label": "Demo Video",
+        "type": "link",
+        "src": "https://youtube.com/watch?v=yourvideo"
+      },
+      {
+        "label": "KiCad Files",
+        "type": "kicad",
+        "src": "files/ats.zip"
+      }
+    ]
   },
   {
-    id: "inverter",
-    title: "500W Inverter Controller",
-    category: "PCB",
-    badge: "Power Electronics",
-    featured: false,
-    description: "ESP32-C3 daughter board for EGS002-based 500W inverter. Monitors IFB/VFB signals, drives an OLED display, and sends WiFi alerts on fault conditions.",
-    chips: ["ESP32-C3","EGS002","OLED","WiFi"],
-    thumbnail: "",
-    files: [
-      { label: "Schematic PDF",   type: "pdf",   src: "files/inverter-schematic.pdf" },
-      { label: "KiCad Files",     type: "kicad", src: "files/inverter.zip" },
+    "id": "inverter",
+    "title": "500W Inverter Controller",
+    "category": "PCB",
+    "badge": "Power Electronics",
+    "featured": false,
+    "description": "ESP32-C3 daughter board for EGS002-based 500W inverter. Monitors IFB/VFB signals, drives an OLED display, and sends WiFi alerts on fault conditions.",
+    "chips": [
+      "ESP32-C3",
+      "EGS002",
+      "OLED",
+      "WiFi"
     ],
-  },
+    "thumbnail": "",
+    "files": [
+      {
+        "label": "Schematic PDF",
+        "type": "pdf",
+        "src": "files/inverter-schematic.pdf"
+      },
+      {
+        "label": "KiCad Files",
+        "type": "kicad",
+        "src": "files/inverter.zip"
+      }
+    ]
+  }
 ];
-
 /* ================================================================
    SITE CONFIG — update your personal details here
 ================================================================ */
 const CONFIG = {
-  name:        "Brian M.",
-  location:    "Nairobi, Kenya",
-  status:      "Available for PCB design & embedded work",
-  email:       "your@email.com",
-  github:      "https://github.com/yourusername",
-  youtube:     "https://youtube.com/@yourchannel",
-  linkedin:    "https://linkedin.com/in/yourusername",
-  fiverr:      "https://www.fiverr.com/yourusername",
-  upwork:      "https://www.upwork.com/freelancers/yourusername",
-  accentColor: "#e06c2a",   /* change this hex to recolour the whole site */
+  "name": "Brian Mathenge",
+  "location": "nyeri, Kenya",
+  "status": "Available for PCB design & embedded work",
+  "email": "tissot8789@email.com",
+  "github": "https://github.com/tissots",
+  "youtube": "https://youtube.com/@nythostech",
+  "linkedin": "www.linkedin.com/in/brian-mathenge-io",
+  "fiverr": "https://www.fiverr.com/tissots",
+  "upwork": "https://www.upwork.com/freelancers/Brian Mathenge",
+  "accentColor": "#e06c2a"
 };
-
 /* ================================================================
    ENGINE — no need to edit below this line
 ================================================================ */
